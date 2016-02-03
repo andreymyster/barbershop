@@ -15,6 +15,10 @@ end
 class Barber < ActiveRecord::Base
 end
 
+# создание сущности клиентских сообщений
+class Message < ActiveRecord::Base
+end
+
 # формирование сообщения об ошибке
 # @error - переменная с текстом об ошибке, выводится в соответствующем вью
 # получает хеш и проверяет если в нем есть пустой ключ то добавляется соотв значение
@@ -38,6 +42,11 @@ end
 # страница записи на стрижку
 get '/visit' do
 	erb :visit
+end
+
+# страница контаков
+get '/contacts' do
+	erb :contacts
 end
 
 # обработка страницы записи
@@ -65,4 +74,26 @@ post '/visit' do
 	Client.create :name => @username,:phone => @phone,:datestamp => @datetime,:barber => @barber,:color => @color
 
 	erb 'Спасибо за запись'
+end
+
+# обработка страницы контакты
+
+post '/contacts' do
+	@email = params[:email]
+	@usermessage = params[:usermessage]
+
+	# создание хэша для вызова функции по формированию отчета об ошибках
+	hh = {
+		:email => 'Введите адрес',
+		:usermessage => 'Введите сообщение'
+	}
+	set_error hh
+
+	# если в переменной еррор что-то есть то выводим эту же страницу с сообщ об ошибках
+	return erb :contacts if @error != ''
+
+	# сохраняем переменные в БД
+	Message.create :mail => @email, :msg => @usermessage
+
+	erb 'Сообщение отправлено'
 end
