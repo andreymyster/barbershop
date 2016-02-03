@@ -62,7 +62,7 @@ post '/visit' do
 	# сохраняем переменные в БД
 	@c = Client.new params[:client]
 	@c.save
-
+	# проверка - произошла ли запись в бд
 	if @c.save
 		erb 'Спасибо за запись'
 	else
@@ -83,5 +83,7 @@ end
 
 # страница одного из барберов
 get '/barber/:id' do
-	erb 'Здесь должна быть страница про барбера чувак'
+	# поиск по параметру
+	@barber = Barber.find params[:id]
+	erb :barber
 end
