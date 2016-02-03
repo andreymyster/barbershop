@@ -48,6 +48,7 @@ end
 
 # страница записи на стрижку
 get '/visit' do
+	@c = Client.new
 	erb :visit
 end
 
@@ -59,13 +60,13 @@ end
 # обработка страницы записи
 post '/visit' do
 	# сохраняем переменные в БД
-	c = Client.new params[:client]
-	c.save
+	@c = Client.new params[:client]
+	@c.save
 
-	if c.save
+	if @c.save
 		erb 'Спасибо за запись'
 	else
-		@error = c.errors.messages.to_s
+		@error = @c.errors.full_messages.first
 		erb :visit
 	end
 
@@ -74,8 +75,8 @@ end
 # обработка страницы контакты
 post '/contacts' do
 	# сохраняем переменные в БД
-	m = Message.new params[:message]
-	m.save
+	@m = Message.new params[:message]
+	@m.save
 
 	erb 'Сообщение отправлено'
 end
