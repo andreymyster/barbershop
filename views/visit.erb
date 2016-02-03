@@ -6,7 +6,7 @@
 
   <div class="form-group">
     <label>Выберите парикмахера </label>
-    <select name="barber" class="form-control">
+    <select name="client[barber]" class="form-control">
 
       <% @barbers.each do |item| %>
         <option <%=@barber == item['name'] ? 'selected' : '' %>><%=item['name']%></option>
@@ -17,22 +17,22 @@
 
   <div class="form-group">
     <label> Ваше имя </label>
-    <input name="username" type="text" class="form-control" placeholder="Иван" value="<%=@username%>">
+    <input name="client[name]" type="text" class="form-control" placeholder="Иван" value="">
   </div>
 
   <div class="form-group">
     <label> Телефон </label>
-    <input name="phone" type="text" class="form-control" placeholder="Телефон" value="<%=@phone%>">
+    <input name="client[phone]" type="text" class="form-control" placeholder="Телефон" value="">
   </div>
 
   <div class="form-group">
     <label> Время записи </label>
-    <input id="datetime" name="datetime" type="text" class="form-control" placeholder="Время" value="<%=@datetime%>">
+    <input id="datetimepicker" name="client[datestamp]" type="text" class="form-control" placeholder="Время" value="<%=@datetime%>">
   </div>
 
   <div class="form-group">
     <label> Цвет краски   </label>
-    <select id='color' name='color'>
+    <select id='color' name='client[color]'>
       <option value="#7bd148">Green</option>
       <option value="#5484ed">Bold blue</option>
       <option value="#a4bdfc">Blue</option>
@@ -55,6 +55,6 @@
 <script type="text/javascript">
   $(function() {
     $('#color').simplecolorpicker();
-    $('#datetime').datetimepicker();
+    $('#datetimepicker').datetimepicker();
   })
 </script>

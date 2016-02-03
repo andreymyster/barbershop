@@ -9,6 +9,11 @@ set :database, "sqlite3:barbershop.db"
 
 # создание сущности Клиент
 class Client < ActiveRecord::Base
+	# валидация - эти поля должны быть не пустыми
+	validates :name, presence: true
+	validates :phone, presence: true
+	validates :datestamp, presence: true
+	validates :color, presence: true
 end
 
 # создание сущности Барбер
@@ -17,6 +22,8 @@ end
 
 # создание сущности клиентских сообщений
 class Message < ActiveRecord::Base
+	validates :mail, presence: true
+	validates :msg, presence: true
 end
 
 # формирование сообщения об ошибке
@@ -51,49 +58,24 @@ end
 
 # обработка страницы записи
 post '/visit' do
-
-	# сохраняем параметры в переменные
-	@username = params[:username]
-	@phone = params[:phone]
-	@datetime = params[:datetime]
-	@barber = params[:barber]
-	@color = params[:color]
-
-	# создание хэша для вызова функции по формированию отчета об ошибках
-	hh = {
-		:username => 'Представься',
-		:phone => 'Введи номер телефона',
-		:datetime => 'Введи дату и время'
-	}
-	set_error hh
-
-	# если в переменной еррор что-то есть то выводим эту же страницу с сообщ об ошибках
-	return erb :visit if @error != ''
-
 	# сохраняем переменные в БД
-	Client.create :name => @username,:phone => @phone,:datestamp => @datetime,:barber => @barber,:color => @color
+	c = Client.new params[:client]
+	c.save
 
-	erb 'Спасибо за запись'
+	if c.save
+		erb 'Спасибо за запись'
+	else
+		@error = c.errors.messages.to_s
+		erb :visit
+	end
+
 end
 
 # обработка страницы контакты
-
 post '/contacts' do
-	@email = params[:email]
-	@usermessage = params[:usermessage]
-
-	# создание хэша для вызова функции по формированию отчета об ошибках
-	hh = {
-		:email => 'Введите адрес',
-		:usermessage => 'Введите сообщение'
-	}
-	set_error hh
-
-	# если в переменной еррор что-то есть то выводим эту же страницу с сообщ об ошибках
-	return erb :contacts if @error != ''
-
 	# сохраняем переменные в БД
-	Message.create :mail => @email, :msg => @usermessage
+	m = Message.new params[:message]
+	m.save
 
 	erb 'Сообщение отправлено'
 end
